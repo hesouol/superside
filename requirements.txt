@@ -1,5 +1,7 @@
-pandas==2.0.3
-requests==2.32.3
+coverage==7.6.1
 fastparquet==0.8.2
+pandas==2.0.3
 pyarrow==17.0.0
 pytest==8.3.2
+requests==2.32.3
+
