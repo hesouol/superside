@@ -64,6 +64,10 @@ Known issues
 1. In the extraction the exception treatment should be improved, the api was raising a few different errors, but I didn't have enough time to jump into that.
 2. This approach writes too many small files, the API was failing too often that's why I decided to keep collecting very small chunks, this can be fixed in the next layer of the lake, compacting the files overnight into larger ones. I decided to write them right after extraction to not overload memory in case of backfilling.
 3. The api does not provide a `gt` (greater than) query filter, just `gte` (greater then or equal). The `gt` operator is present in the docs, but it doesn't work. This may cause duplicates between batches, but it can also be fixed in the next layers using `uuid` and `updated_at` fields.
+4. I used ChatGPT to generate the `extract_location_value`, I found the approach quite clever so I kept it with minor adjustments.
+5. I totally underestimated the effort necessary for this challenge. The crunchbase docs are not very helpful and it was a bit stressful to go over it and have everything working.
+6. The project is a bit over engineered, I would like to show the possibilities when extracting data. Depending on the scenario the script could be simplified.
+7. I used MacOS (M1) to build this project, I had issues in the past running MacOS projects on Linux, let me know if you have any issues and I can try to adjust.
 
 Final Thoughts
 ------------
