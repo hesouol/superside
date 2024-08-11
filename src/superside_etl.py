@@ -100,7 +100,7 @@ class SupersideETL(BaseETL, ABC):
         data = response.json()
         self.total_records = data["count"]
         df = pd.json_normalize(data["entities"])
-        return df
+        return df, self.total_records
 
     def transform(self, data: pd.DataFrame) -> pd.DataFrame:
         df = data.rename(
@@ -141,7 +141,7 @@ class SupersideETL(BaseETL, ABC):
         loaded_records = 0
         last_id = None
         while self.total_records is None or loaded_records < self.total_records:
-            df = self.extract(last_id=last_id)
+            df, self.total_records = self.extract(last_id=last_id)
             df = self.transform(df)
             self.load(
                 data=df,
@@ -149,9 +149,10 @@ class SupersideETL(BaseETL, ABC):
                 extraction_date=self.partition_date,
                 file_name=f"org_{loaded_records}.parquet",
             )
-            last_id = df.iloc[-1]["uuid"]
-            loaded_records += LIMIT
-            logging.info(f"Collected {loaded_records}/{self.total_records}")
+            if len(df) > 0:
+                last_id = df.iloc[-1]["uuid"]
+                loaded_records += len(df)
+                logging.info(f"Collected {loaded_records}/{self.total_records}")
 
 
 if __name__ == "__main__":

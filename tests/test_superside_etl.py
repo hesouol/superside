@@ -29,7 +29,7 @@ class TestSupersideETL(unittest.TestCase):
         mock_request.return_value = mock_response
 
         subject = superside_etl.SupersideETL(processing_date=date(2024, 1, 1))
-        df = subject.extract(last_id=None)
+        df, _ = subject.extract(last_id=None)
         _, kwargs = mock_request.call_args
 
         used_headers = kwargs["headers"]
@@ -128,6 +128,13 @@ class TestSupersideETL(unittest.TestCase):
         self.assertEqual(result_record["region"], "fake_region")
         self.assertEqual(result_record["city"], "fake_city")
         self.assertEqual(len(result_df.columns), 9)
+
+    def test_run(self):
+        subject = superside_etl.SupersideETL(processing_date=None)
+        subject.extract = lambda last_id: (pd.json_normalize([{"uuid": "fake_uuid"}]), 1)  # total_records=1
+        subject.transform = lambda df: df
+        subject.load = lambda data, context, extraction_date, file_name: self.assertEqual(data.iloc[0]["uuid"], "fake_uuid")
+        subject.run()
 
 
 if __name__ == "__main__":

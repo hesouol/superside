@@ -41,30 +41,3 @@ class BaseETL(ABC):
         os.makedirs(output_dir, exist_ok=True)
         file_path = os.path.join(output_dir, file_name)
         data.to_parquet(file_path, index=False)
-
-    def run(
-        self,
-        *args,
-        context: str,
-        extraction_date: date = None,
-        file_name: str = None,
-    ):
-        """
-        Method for running default ETL process.
-        Args:
-          *args: Variable length arguments specific to the extraction process.
-          context: Context of the extraction
-          extraction_date: The processing date
-          file_name: Name for the file to be written
-
-        Returns:
-          None
-        """
-        extracted_data = self.extract(*args)
-        transformed_data = self.transform(extracted_data)
-        self.load(
-            transformed_data,
-            context=context,
-            extraction_date=extraction_date,
-            file_name=file_name,
-        )
