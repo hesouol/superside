@@ -26,6 +26,8 @@ If you want to run the tests, run those in the root directory. Four tests must b
 ~~~bash
     $ pip install -r requirements.txt
     $ pytest
+    $ coverage run -m pytest
+    $ coverage report -m 
 ~~~
 
 About the Project
@@ -58,6 +60,7 @@ It could be easy to automate it with:
 - Kubernetes [CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
 
 The records can be dumped daily filtering by the `processing-date` provided.
+It is easy to backfill and to recover from failures when using Apache Airflow, the failing tasks can be re triggered and configured for timeouts, number of retries and set up alerts in case of any serious issues.
 
 Known issues
 ------------
